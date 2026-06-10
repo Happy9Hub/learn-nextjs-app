@@ -1,16 +1,31 @@
+import { prisma } from "@/lib/prisma";
 import { Product } from "@/types/product";
+import { connection } from "next/server";
 
-async function fetchProducts(): Promise<Product[]> {
-  const res = await fetch("https://backend.codingthailand.com/v2/products");
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
-  }
-  const json: unknown = await res.json(); // Array of products
-  return json as Product[];
+// async function fetchProducts(): Promise<Product[]> {
+//   const res = await fetch("https://backend.codingthailand.com/v2/products");
+//   if (!res.ok) {
+//     throw new Error("Failed to fetch products");
+//   }
+//   const json: unknown = await res.json(); // Array of products
+//   return json as Product[];
+// }
+
+async function fetchProducts() {
+  const products = await prisma.products.findMany({
+    include: {
+      categories: true
+    },
+    orderBy: {
+      id: "desc",
+    },
+  });
+  return products;
 }
 
 const Features = async () => {
 
+  await connection;
   const products = await fetchProducts();
 
   return (
@@ -25,11 +40,11 @@ const Features = async () => {
             key={product.id}
           >
             <div className="mb-5">
-              {product.barcode}
+              ID:{product.id} Category: {product.categories?.name}
             </div>
-            <span className="font-medium text-lg">{product.category.name}</span>
+            <span className="font-medium text-lg">{product.name}</span>
             <p className="mt-1 text-[15px] text-foreground/80">
-                ชื่อสินค้า: {product.name} ราคา: {product.price} บาท
+                รายละเอียดสินค้า: {product.description} ราคา: {product.price?.toFixed(2)} บาท
             </p>
           </div>
         ))}
