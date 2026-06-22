@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Product } from "@/types/product";
+// import { Product } from "@/types/product";
 import { connection } from "next/server";
 
 // async function fetchProducts(): Promise<Product[]> {
@@ -25,7 +25,7 @@ async function fetchProducts() {
 
 const Features = async () => {
 
-  await connection;
+  await connection();
   const products = await fetchProducts();
 
   return (

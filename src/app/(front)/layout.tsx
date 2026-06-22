@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Prompt } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/navbar";
+import { Suspense } from "react";
 
 export const promptFont = Prompt({
   subsets: ["thai"],
@@ -24,7 +25,9 @@ export default function RootLayout({
       lang="th"
     >
       <body className={promptFont.className}>
+        <Suspense fallback={<div>Loading...</div>} >
         <Navbar />
+        </Suspense>
         {children}
       </body>
 
