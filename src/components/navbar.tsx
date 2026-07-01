@@ -39,6 +39,11 @@ const Navbar = async () => {
               Hello, {session.user.name}
             </div>
             <div>
+              <Button asChild>
+                  <Link href="/chat">Chat with AI</Link>
+              </Button>
+            </div>
+            <div>
               <LogoutButton />
             </div>
             </>
