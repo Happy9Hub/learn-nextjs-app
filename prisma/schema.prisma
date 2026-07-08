@@ -18,6 +18,7 @@ model customers {
   name    String?  @db.VarChar(255)
   address String?  @db.VarChar(500)
   phone   String?  @db.VarChar(20)
+  userId  String   @db.VarChar(100)
   orders  orders[]
 }
 
@@ -129,6 +130,17 @@ model Verification {
 
   @@index([identifier(length: 191)])
   @@map("verification")
+}
+
+model ChatThread {
+  threadId     String   @id @map("thread_id") @db.VarChar(64)
+  userId       String   @map("user_id")
+  preview      String?  @db.Text
+  messageCount Int      @default(0) @map("message_count")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@map("chat_threads")
 }
 
 enum orders_status {
