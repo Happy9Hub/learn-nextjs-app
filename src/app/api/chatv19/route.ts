@@ -3,12 +3,13 @@ import { ChatOllama } from "@langchain/ollama";
 import { createAgent } from "langchain";
 import { createUIMessageStreamResponse, UIMessage } from "ai";
 import { toBaseMessages, toUIMessageStream } from "@ai-sdk/langchain";
-import { getCurrentDateTool, searchAllProductTool } from "@/agent-tools";
+import { executeSql, getCurrentDateTool, searchAllProductTool } from "@/agent-tools";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getCheckpointer } from "@/db/checkpointer";
 import { prisma } from "@/lib/prisma";
+import { skillMiddleware } from "@/agent-middlewares/skill-prompt";
 
 const llmModel = new ChatOllama({
     model: 'gemma4:31b-cloud',
@@ -45,9 +46,14 @@ export async function POST(req: NextRequest) {
                     หากคุณไม่ทราบคำตอบ ให้ตอบว่า "ขอโทษ ฉันไม่ทราบคำตอบสำหรับคำถามนี้" และอย่าพยายามสร้างคำตอบที่ไม่ถูกต้อง
                     หากลูกค้าถามเกี่ยวกับผลิตภัณฑ์ ให้ใช้เครื่องมือ searchAllProductTool เพื่อค้นหาผลิตภัณฑ์ที่เกี่ยวข้องและให้ข้อมูลที่ถูกต้อง
                     หากลูกค้าถามเกี่ยวกับวันและเวลา ให้ใช้เครื่องมือ getCurrentDateTool เพื่อให้ข้อมูลที่ถูกต้อง
+                    ถ้าลูกค้าถามเกี่ยวกับยอดขาย รายได้ สรุปยอดขายให้เรียก load_skill('sale-analytics') ก่อน แล้วเขียน SQL (MariaDB) 
+                    ส่งให้ executeSql เพื่อรัน SELECT query และตอบผลลัพธ์
                     อย่าลืมตรวจสอบความถูกต้องของข้อมูลก่อนที่จะตอบลูกค้า`,
-        tools: [ getCurrentDateTool, searchAllProductTool ],
+        tools: [ getCurrentDateTool, searchAllProductTool, executeSql ],
         checkpointer: checkpointer,
+        middleware: [
+            skillMiddleware, // เพิ่ม middleware สำหรับ skills
+        ],
     });
 
     const response = agent.streamEvents(
