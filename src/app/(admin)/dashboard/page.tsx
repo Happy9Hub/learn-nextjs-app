@@ -1,17 +1,14 @@
-// import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-// import { DataTable } from "@/components/data-table"
-import { SectionCards } from "@/components/section-cards"
+import { redirect } from "next/navigation"
+import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
+import { DashboardClient } from "./dashboard-client"
 
-// import data from "./data.json"
+export default async function DashboardPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
 
-export default function DashboardPage() {
-  return (
-    <>
-        <SectionCards />
-        <div className="px-4 lg:px-6">
-        {/* <ChartAreaInteractive /> */}
-        </div>
-        {/* <DataTable data={data} /> */}
-    </>
-  )
+  if (!session || session.user.role !== "admin") {
+    redirect("/")
+  }
+
+  return <DashboardClient />
 }
