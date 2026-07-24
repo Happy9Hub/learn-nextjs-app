@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Prompt } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/navbar";
+import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 
 export const promptFont = Prompt({
@@ -29,6 +30,7 @@ export default function RootLayout({
         <Navbar />
         </Suspense>
         {children}
+        <Toaster />
       </body>
 
     </html>
