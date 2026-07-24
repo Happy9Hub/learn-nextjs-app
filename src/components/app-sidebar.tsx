@@ -15,7 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon } from "lucide-react"
+import { LayoutDashboardIcon, ListIcon, ChartBarIcon, PackageIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 
 const data = {
@@ -27,7 +27,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: (
         <LayoutDashboardIcon
         />
@@ -50,10 +50,10 @@ const data = {
       ),
     },
     {
-      title: "Projects",
-      url: "#",
+      title: "Products",
+      url: "/dashboard/products",
       icon: (
-        <FolderIcon
+        <PackageIcon
         />
       ),
     },
