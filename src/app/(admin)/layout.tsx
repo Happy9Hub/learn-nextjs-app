@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { K2D } from "next/font/google";
 import "../globals.css";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { Suspense } from "react";
 import DLayout from "./dashboard/DLayout";
 
@@ -20,9 +19,7 @@ export const metadata: Metadata = {
 
 // แยกส่วนที่เป็น dynamic ออกมา ให้ render ภายใต้ Suspense
 async function AdminGuard({ children }: { children: React.ReactNode }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getCachedSession();
 
   if (session?.user.role !== 'admin') {
     redirect('/');

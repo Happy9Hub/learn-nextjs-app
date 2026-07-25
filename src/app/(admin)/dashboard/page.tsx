@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation"
-import { headers } from "next/headers"
-import { auth } from "@/lib/auth"
+import { getCachedSession } from "@/lib/get-session"
 import { DashboardClient } from "./dashboard-client"
 
 export default async function DashboardPage() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "admin") {
     redirect("/")
