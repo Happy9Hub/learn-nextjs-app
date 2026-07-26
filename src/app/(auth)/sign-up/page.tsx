@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 const registerSchema = z
   .object({
@@ -34,7 +35,7 @@ const registerSchema = z
     email: z
       .string()
       .min(1, "กรุณากรอกอีเมล")
-      .email("รูปแบบอีเมลไม่ถูกต้อง"),
+      .pipe(z.email("รูปแบบอีเมลไม่ถูกต้อง")),
     password: z
       .string()
       .min(1, "กรุณากรอกรหัสผ่าน")
@@ -69,11 +70,11 @@ export default function RegisterForm() {
       password: data.password
      }, {
       onSuccess: () => {
-        alert('สมัครสมาชิกสำเร็จ');
+        toast.success('สมัครสมาชิกสำเร็จ');
         router.replace('/sign-in');
       },
       onError: (ctx) => {
-        alert(JSON.stringify(ctx.error));
+        toast.error(ctx.error.message || 'สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
       }
      });
   }
@@ -178,8 +179,13 @@ export default function RegisterForm() {
         </form>
       </CardContent>
       <CardFooter className="flex flex-col gap-3">
-        <Button type="submit" form="form-register" className="w-full">
-          สมัครสมาชิก
+        <Button
+          type="submit"
+          form="form-register"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? "กำลังสมัครสมาชิก..." : "สมัครสมาชิก"}
         </Button>
         <p className="text-center text-body-small text-muted-foreground">
           มีบัญชีอยู่แล้ว?{" "}

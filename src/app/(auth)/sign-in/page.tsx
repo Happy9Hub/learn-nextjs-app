@@ -23,12 +23,13 @@ import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 const loginSchema = z.object({
   email: z
     .string()
     .min(1, "กรุณากรอกอีเมล")
-    .email("รูปแบบอีเมลไม่ถูกต้อง"),
+    .pipe(z.email("รูปแบบอีเมลไม่ถูกต้อง")),
   password: z
     .string()
     .min(1, "กรุณากรอกรหัสผ่าน")
@@ -53,7 +54,7 @@ export default function LoginForm() {
         password: data.password
        }, {
         onSuccess: async () => {
-          alert('เข้าสู่ระบบสำเร็จ');
+          toast.success('เข้าสู่ระบบสำเร็จ');
           const { data: session } = await authClient.getSession();
           if (session?.user.role === 'admin') {
               router.replace('/dashboard');
@@ -62,7 +63,7 @@ export default function LoginForm() {
           }
         },
         onError: (ctx) => {
-          alert(JSON.stringify(ctx.error));
+          toast.error(ctx.error.message || 'เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
         }
        }); 
   }
@@ -125,8 +126,13 @@ export default function LoginForm() {
         </form>
       </CardContent>
       <CardFooter className="flex flex-col gap-3">
-        <Button type="submit" form="form-login" className="w-full">
-          เข้าสู่ระบบ
+        <Button
+          type="submit"
+          form="form-login"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
         </Button>
         <p className="text-center text-body-small text-muted-foreground">
           ยังไม่มีบัญชี?{" "}
