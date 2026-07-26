@@ -187,6 +187,7 @@ export default function ChatWindowV19({ email, id }: ChatWindowV19Props) {
   // Initialize on client only (avoid hydration mismatch)
   // ============================================================================
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time client-only mount flag, required to avoid SSR/CSR hydration mismatch
     setIsClient(true);
     if (!currentSessionId) {
       const newSessionId = crypto.randomUUID?.() || `${Date.now()}`;
@@ -210,6 +211,7 @@ export default function ChatWindowV19({ email, id }: ChatWindowV19Props) {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-mount; setState happens after an await, not synchronously
     fetchChatHistories();
   }, [fetchChatHistories]);
 

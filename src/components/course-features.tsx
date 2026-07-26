@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CourseResponse } from "@/types/course";
 
@@ -28,7 +29,7 @@ const CourseFeatures = async () => {
             <Link href="#" key={index}>
               <div className="-mx-2 flex max-w-lg items-center gap-6 rounded-lg sm:mx-0">
                 <div className="aspect-square h-24 shrink-0 overflow-hidden rounded-lg bg-background">
-                  <img
+                  <Image
                     alt=""
                     className="size-full object-contain"
                     height={96}
