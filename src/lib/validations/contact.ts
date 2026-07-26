@@ -5,7 +5,7 @@ export const contactSchema = z.object({
   email: z
     .string()
     .min(1, "กรุณากรอก Email")
-    .email("รูปแบบ Email ไม่ถูกต้อง"),
+    .pipe(z.email("รูปแบบ Email ไม่ถูกต้อง")),
   message: z
     .string()
     .min(10, "ข้อความต้องมีอย่างน้อย 10 ตัวอักษร")
